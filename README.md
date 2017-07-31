@@ -7,4 +7,14 @@
 sudo pip install tabulate
 
 psutil 为5.2.2 版本
+
 sudo pip install psutil
+
+## 使用说明
+
+打开keep.py文件， 修改 execute 和 conf 两个全局变量
+
+execute 是运行程序名称
+conf   是配置文件名称
+
+
