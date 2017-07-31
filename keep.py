@@ -6,22 +6,27 @@ import psutil
 from time import sleep, ctime, localtime
 from tabulate import tabulate
 
+#修改以下两处参数
+execute = '/usr/bin/python'
+conf = "/root/myPython/test/redis-server.py"
+
 def start_process():
-    cmdline = "/usr/bin/python /root/myPython/test/redis-server.py test.conf 1>/dev/null  2>1  &"
+    global execute, conf
+    cmdline = "%s %s 1>/dev/null  2>&1  &" % (execute, conf)
     os.system(cmdline)
     print ctime(), "Process restart"
 
 def found_process():
-    pro_list = psutil.get_process_list()
+    global conf
     headers = ['pid', 'ppid', 'name', 'cmdline']
     table = []
     res = False
-    for pro in pro_list:
-        if 'redis' in ' '.join(pro.cmdline):
-            table.append((pro.pid, pro.ppid, pro.name, ' '.join(pro.cmdline)))
+    for pid in psutil.pids():
+        pro = psutil.Process(pid)
+        if conf in ' '.join(pro.cmdline()):
+            table.append((pro.pid, pro.ppid(), pro.name(), ' '.join(pro.cmdline())))
             res = True
-            #pro.kill()
-    print tabulate(table, headers = headers)
+            print tabulate(table, headers = headers)
     return res
 
 
